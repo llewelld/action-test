@@ -10,7 +10,6 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
       - name: Compile PDF document
-      - name: Generate PDF
         uses: tj-actions/puppeteer@v5
         run: |
           npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7 commander@7.2.0
