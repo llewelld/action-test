@@ -10,10 +10,10 @@ jobs:
       - name: Set up Git repository
         uses: actions/checkout@v4
       - name: Compile PDF document
-          run: |
-            npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7
-            cp /home/draft/* .
-            node ./convert.mjs
+        run: |
+          npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7
+          cp /home/draft/* .
+          node ./convert.mjs
       - name: Commit to orphan branch
         run: |
           git checkout --orphan gh-action-result/pdf-files
