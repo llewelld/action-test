@@ -23,16 +23,16 @@ jobs:
           npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7 commander@7.2.0
           node ./convert.mjs -i draft.md -o draft.pdf
           popd
-#      - name: Commit to orphan branch
-#        run: |
-#          git checkout --orphan gh-action-result/pdf-files
-#          git rm -rf .
-#          git add /home/pptruser/draft.pdf
-#          git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built PDF document"
-#      - name: Push changes
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: gh-action-result/pdf-files
-#          force: true
+      - name: Commit to orphan branch
+        run: |
+          git checkout --orphan gh-action-result/pdf-files
+          git rm -rf .
+          git add draft/draft.pdf
+          git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built PDF document"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-action-result/pdf-files
+          force: true
 
