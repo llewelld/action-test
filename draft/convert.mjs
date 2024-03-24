@@ -3,22 +3,34 @@
 import { convert } from './node_modules/mdpdf/src/index.js';
 import { PDFDocument } from './node_modules/pdf-lib/cjs/index.js';
 import { writeFileSync, readFileSync } from "node:fs";
+import commander from "./node_modules/commander/index.js";
 
-async function removePage() {
-  const letters = await PDFDocument.load(readFileSync("draft.pdf"));
+async function removePage(options) {
+  const letters = await PDFDocument.load(readFileSync(options.destination));
   letters.removePage(0);
   letters.removePage(0);
-  writeFileSync("draft.pdf", await letters.save());
+  writeFileSync(options.destination, await letters.save());
 }
+
+commander
+  .version('1.0.0', '-v, --version')
+  .usage('[OPTIONS]...')
+  .requiredOption('-i, --input <value>', 'input markdown file.')
+  .requiredOption('-o, --output <value>', 'output PDF file.')
+  .parse(process.argv);
+
+const params = commander.opts();
+const input = params.input;
+const output = params.output;
 
 let options = {
     ghStyle: false,
     defaultStyle: false,
-    source: './draft.md',
-    destination: './draft.pdf',
-    styles: './style.css',
-    header: './header.html',
-    footer: './footer.html',
+    source: input,
+    destination: output,
+    styles: './ttr-style/style.css',
+    header: './ttr-style/header.html',
+    footer: './ttr-style/footer.html',
     //debug: './draft.html',
     pdf: {
         format: 'A4',
@@ -35,7 +47,7 @@ let options = {
 console.log('Converting markdown to PDF');
 convert(options).then((pdfPath) => {
     console.log('Stripping initial blank pages');
-		removePage();
+		removePage(options);
     console.log('Done');
     console.log('Generated PDF:', pdfPath);
 }).catch((err) => {

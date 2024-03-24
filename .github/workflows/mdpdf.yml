@@ -5,25 +5,26 @@ on:
       - 'gh-action-result/pdf-files'
 jobs:
   build_pdf:
-    runs-on: ghcr.io/puppeteer/puppeteer:22.6.0
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4
       - name: Compile PDF document
+      - name: Generate PDF
+        uses: tj-actions/puppeteer@v5
         run: |
-          npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7
-          cp /home/draft/* .
-          node ./convert.mjs
-      - name: Commit to orphan branch
-        run: |
-          git checkout --orphan gh-action-result/pdf-files
-          git rm -rf .
-          git add /home/pptruser/draft.pdf
-          git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built PDF document"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-action-result/pdf-files
-          force: true
+          npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7 commander@7.2.0
+          node ./convert.mjs -i draft.md -o draft.pdf
+#      - name: Commit to orphan branch
+#        run: |
+#          git checkout --orphan gh-action-result/pdf-files
+#          git rm -rf .
+#          git add /home/pptruser/draft.pdf
+#          git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built PDF document"
+#      - name: Push changes
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          branch: gh-action-result/pdf-files
+#          force: true
 
