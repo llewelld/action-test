@@ -9,10 +9,17 @@ jobs:
     steps:
       - name: Set up Git repository
         uses: actions/checkout@v4
-      - name: Compile PDF document
-        uses: tj-actions/puppeteer@v5
+      - name: Install dependencies
         run: |
+          apt update
+          apt install -y curl
+          curl -sL https://deb.nodesource.com/setup_20.x -o /tmp/nodesource_setup.sh
+          curl -sL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /tmp/google-chrome-stable_current_amd64.deb
+          bash /tmp/nodesource_setup.sh
+          apt-get install -y nodejs /tmp/google-chrome-stable_current_amd64.deb
           npm install mdpdf@3.0.2 pdf-lib@1.17.1 path@0.12.7 commander@7.2.0
+      - name: Compile PDF document
+        run: |
           node ./convert.mjs -i draft.md -o draft.pdf
 #      - name: Commit to orphan branch
 #        run: |
